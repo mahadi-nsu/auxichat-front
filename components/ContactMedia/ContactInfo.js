@@ -1,7 +1,10 @@
 import React from "react";
-import Image from "next/image";
 
 const ContactInfo = () => {
+  const profileData = {
+    name: "Alena Rhiel Madsen",
+    designation: "Sr. Visual Designer",
+  };
   return (
     <div className=" mt-2 mr-2 flex flex-col items-center">
       <span className="text-[#6588DE] text-[18px] font-semibold">
@@ -13,11 +16,11 @@ const ContactInfo = () => {
         alt="profile-img"
       />
       <span className="text-[#6588DE] text-[18px] font-semibold mt-3">
-        Alena Rhiel Madsen
+        {profileData.name}
       </span>
 
       <span className="text-[#52585D] text-[15px] font-normal mt-3">
-        Sr. Visual Designer
+        {profileData.designation}
       </span>
 
       <div className=" h-14 mt-4 w-3/4 flex justify-evenly">
@@ -32,9 +35,9 @@ const ContactInfo = () => {
           <span className="text-[#F2F6F7] mr-4 mb-1 ml-4">Call</span>
         </div>
       </div>
-      {/* <div class="py-4">
-        <div class="w-full border-t border-green-500">Mahadi Hassan Tahsin</div>
-      </div> */}
+      <div class="py-1">
+        <div class="w-80  max-w-full border-t border-[#D0D9DF]"></div>
+      </div>
     </div>
   );
 };

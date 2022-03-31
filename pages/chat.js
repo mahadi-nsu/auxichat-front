@@ -20,7 +20,14 @@ const chat = () => {
 
       {/* right sidebar started */}
 
-      <div className="bg-[#E3F6FC] col-span-3 ">
+      <div className="bg-[#E3F6FC] w-[420px] mt-4">
+        <div className="bg-[#6588DE] w-8 h-8 mt-6 ml-6 p-[4px] rounded-full flex justify-center items-center mb-8">
+          <img
+            className="object-cover w-[10px] h-[10px]"
+            src="/images/Vector.png"
+            alt="profile-img"
+          />
+        </div>
         <ContactInfo />
         <ContactMedia />
       </div>
