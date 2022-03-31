@@ -1,5 +1,6 @@
 import React from "react";
 import ChatUserSelfCard from "../components/ChatLeftSideBar/ChatUserSelfCard";
+import ContactActions from "../components/ContactMedia/ContactActions";
 import ContactInfo from "../components/ContactMedia/ContactInfo";
 import ContactMedia from "../components/ContactMedia/ContactMedia";
 
@@ -30,6 +31,8 @@ const chat = () => {
         </div>
         <ContactInfo />
         <ContactMedia />
+
+        <ContactActions />
       </div>
     </div>
   );

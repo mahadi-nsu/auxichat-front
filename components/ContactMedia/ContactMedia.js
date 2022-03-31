@@ -18,7 +18,6 @@ const ContactMedia = () => {
     setLoadMore(true);
   };
 
-  console.log(loadMore);
   return (
     <div className="mt-2 mr-2 flex flex-col items-center">
       <span className="text-[#6588DE] text-[18px] font-semibold">Media</span>
@@ -56,6 +55,10 @@ const ContactMedia = () => {
             )}
           </>
         )}
+      </div>
+
+      <div class="py-1">
+        <div class="w-80  max-w-full border-t border-[#D0D9DF] mt-4"></div>
       </div>
     </div>
   );
