@@ -4,6 +4,7 @@ const ContactInfo = () => {
   const profileData = {
     name: "Alena Rhiel Madsen",
     designation: "Sr. Visual Designer",
+    profile_pic: "/images/user_profile.png",
   };
   return (
     <div className=" mt-2 mr-2 flex flex-col items-center">
@@ -12,7 +13,7 @@ const ContactInfo = () => {
       </span>
       <img
         className="object-cover h-28 w-28 rounded-full mt-4"
-        src="/images/user_profile.png"
+        src={profileData.profile_pic}
         alt="profile-img"
       />
       <span className="text-[#6588DE] text-[18px] font-semibold mt-3">
