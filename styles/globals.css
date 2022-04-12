@@ -1,25 +1,46 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;1,100;1,200&display=swap');
-html,body{
+
+html,
+body {
   font-family: "Poppins"
 }
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer utilities {
   .br {
     border: 1px solid red;
   }
+
   .bb {
     border: 1px solid blue;
   }
+
   .bg {
     border: 1px solid green;
   }
-  .bp{
+
+  .bp {
     border: 1px solid pink;
   }
+
   .by {
     border: 1px solid yellow;
+  }
+
+  .hide_scrollbar {
+    -ms-overflow-style: none;
+    /* for Internet Explorer, Edge */
+    scrollbar-width: none;
+    /* for Firefox */
+    overflow-y: scroll;
+  }
+
+  .hide_scrollbar::-webkit-scrollbar {
+    display: none;
+    /* for Chrome, Safari, and Opera */
   }
 }
 
