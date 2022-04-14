@@ -1,34 +1,138 @@
-import React from "react";
+import React, { useState } from "react";
 import ChatListCard from "../components/ChatLeftSideBar/ChatListCard";
 import ChatUserSelfCard from "../components/ChatLeftSideBar/ChatUserSelfCard";
 import ContactActions from "../components/ContactMedia/ContactActions";
 import ContactInfo from "../components/ContactMedia/ContactInfo";
 import ContactMedia from "../components/ContactMedia/ContactMedia";
+import { BiUser, BiStar, BiSearch, } from "react-icons/bi";
+import { FiUsers } from "react-icons/fi";
 import { chatListData } from "../dummyChatList";
 
+
 const chat = () => {
+  const [selectedChat, setSelectedChat] = useState(chatListData[0].id)
+  const [chatOrMedia, setChatOrMedia] = useState("Chat")
+  const demoChat = [
+    {
+      name: 'Mehmat',
+      message: 'hey, how are you',
+      photo: '/images/person (11).png',
+      time: '10:10'
+    },
+    {
+      name: 'Alena',
+      message: 'fine, what is going on with you ?',
+      photo: '/images/person (1).png',
+      time: '10:10'
+    },
+    {
+      name: 'Mehmat',
+      message: 'nice, very nice',
+      photo: '/images/person (11).png',
+      time: '10:11'
+    },
+  ]
   return (
-    <div className="h-screen flex gap-5">
+    <div className="h-screen flex gap-5 bg-[#F8FAFB]">
       {/* LEFT SIDE BAR START */}
-      <div className="flex flex-col basis-[20%] max-w-xs h-screen overflow-y-scroll hide_scrollbar">
+      <div className="flex flex-col basis-[22%] min-w-max max-w-sm min-h-screen overflow-y-scroll hide_scrollbar">
         <div className="bg-[#E3F6FC] rounded-b-lg p-5">
           <ChatUserSelfCard />
         </div>
-        <div className="bg-[#E3F6FC] mt-4 p-5 flex flex-col gap-10 h-full rounded-t-lg">
+        <div className="bg-[#E3F6FC] mt-4 p-4 flex flex-col gap-5 rounded-t-lg">
           {
             chatListData.map((chatPreviewData, index) => (
               <ChatListCard
+                selectedChat={selectedChat}
+                setSelectedChat={setSelectedChat}
                 chatPreviewData={chatPreviewData}
                 key={index}
               />
             ))
           }
         </div>
-        <div className="bg-[#E3F6FC]"></div>
+        <div className="bg-[#E3F6FC] border-t flex justify-evenly items-center h-full">
+          <div className=" hover:text-[#6588de] text-[#AFBCC6] hover:scale-110 duration-200 py-3">
+            <BiUser size={25} />
+          </div>
+          <div className=" hover:text-[#6588de] text-[#AFBCC6] hover:scale-110 duration-200 py-3">
+            <FiUsers size={25} />
+          </div>
+          <div className=" hover:text-[#6588de] text-[#AFBCC6] hover:scale-110 duration-200 py-3">
+            <BiStar size={25} />
+          </div>
+          <div className=" hover:text-[#6588de] text-[#AFBCC6] hover:scale-110 duration-200 py-3">
+            <BiSearch size={25} />
+          </div>
+        </div>
       </div>
       {/* LEFT SIDE BAR END */}
 
-      <div className="grow"></div>
+      {/* MIDDLE PART START */}
+
+      <div className="grow relative flex flex-col justify-end ">
+
+        <div className="absolute top-5 centered-axis-x h-[40px] rounded-[14px] shadow-md bg-[#FDFDFD] shadow-black/25 text-[12px] font-semibold">
+          <button
+            onClick={() => setChatOrMedia("Chat")}
+            className={`text:[#52585E] w-[130px] rounded-[14px] h-full focus:outline-none active:outline-none
+            ${chatOrMedia === "Chat" ? "text-[#FDFDFE] bg-[#6588DE]" : ""}
+            `}>
+            Chat
+          </button>
+          <button
+            onClick={() => setChatOrMedia("Media")}
+            className={`text:[#52585E] w-[130px] rounded-[14px] h-full focus:outline-none
+            ${chatOrMedia === "Media" ? "text-[#FDFDFE] bg-[#6588DE]" : ""}
+            `}>
+            Media
+          </button>
+        </div>
+
+        <div className="flex flex-col mb-[80px]">
+          {
+            demoChat.map((content, index) =>
+              <div key={index} className={`${content.name === 'Mehmat' ? 'self-end' : 'self-start'}`}>
+                <div className={`${content.name === 'Mehmat' ? 'text-right' : ''}`}>
+                  <p
+                    className={`text-[#52585D] text-[12px] font-semibold py-2`}
+                  >
+                    {content.name}
+                  </p>
+                </div>
+
+                <div className={`flex gap-5 ${content.name === 'Mehmat' ? 'flex-row-reverse' : 'flex-row'}`}>
+                  <img className="w-[44px] h-[44px]" src={content.photo} alt="photo" />
+                  <div className={`${content.name === 'Mehmat' ? 'bg-[#F3BA4A] rounded-tr-none text-[#FDFDFE]' : 'bg-[#E3F6FC] rounded-tl-none text-[#52585D]'} py-3 px-5 rounded-[14px]`}>
+                    <p className="text-[12px]">{content.message}</p>
+                    <p className="text-[10px] text-right pt-3">{content.time}</p>
+                  </div>
+
+                </div>
+
+              </div>
+            )
+          }
+        </div>
+
+        <div className="absolute bottom-5 w-full flex items-center gap-5">
+          <img className="px-3 h-[20px]" src="/images/settings.png" alt="" />
+          <div className="flex items-center w-full pl-3 h-[40px] border border-[#96A9BA] bg-[#FDFDFD] rounded-[14px]">
+            <img className="px-3 h-[20px]" src="/images/attachment icon.png" alt="" />
+            <img className="px-3 h-[20px]" src="/images/voice icon.png" alt="" />
+            <input
+              className="focus:outline-none w-full px-5"
+              type="text"
+              placeholder="Type a new message..." />
+            <button
+              className="bg-[#6588DE] border border-[#6588DE] h-[40px] rounded-[13px] text-[12px] font-semibold text-[#FDFDFE] w-[108px]"
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+      {/* MIDDLE PART END */}
 
       {/* right sidebar started */}
 

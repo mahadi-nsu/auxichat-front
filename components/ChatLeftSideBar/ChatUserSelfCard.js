@@ -8,7 +8,7 @@ const ChatUserSelfCard = () => {
             </div>
 
             <div className="basis-[80%] flex flex-col justify-around">
-                <p className="text-[14px] text-[#52585D] font-semibold">Mehmat Revanaki</p>
+                <p className="text-[14px] text-[#52585D] font-semibold whitespace-nowrap">Mehmat Revanaki</p>
                 <div className="bg-[#6588DE] flex items-center gap-2 py-[2px] px-1.5 rounded-full w-max">
                     <div className="w-3 h-3 bg-[#F3BA4A] rounded-full"></div>
                     <select className="text-[10px] text-white bg-[#6588DE] rounded-full focus:outline-none" name="" id="">

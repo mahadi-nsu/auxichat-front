@@ -30,6 +30,12 @@ body {
     border: 1px solid yellow;
   }
 
+  .centered-axis-x {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, 0);
+  }
+
   .hide_scrollbar {
     -ms-overflow-style: none;
     /* for Internet Explorer, Edge */
