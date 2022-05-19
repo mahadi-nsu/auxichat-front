@@ -57,8 +57,8 @@ const ContactMedia = () => {
         )}
       </div>
 
-      <div class="py-1">
-        <div class="w-80  max-w-full border-t border-[#D0D9DF] mt-4"></div>
+      <div className="py-1">
+        <div className="w-80  max-w-full border-t border-[#D0D9DF] mt-4"></div>
       </div>
     </div>
   );

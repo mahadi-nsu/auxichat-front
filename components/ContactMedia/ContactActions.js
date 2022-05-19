@@ -13,16 +13,16 @@ const ContactActions = () => {
           Mute Notifications
         </span>
       </div>
-      <div class="py-1 flex justify-center">
-        <div class="w-80  max-w-full border-t border-[#D0D9DF]"></div>
+      <div className="py-1 flex justify-center">
+        <div className="w-80  max-w-full border-t border-[#D0D9DF]"></div>
       </div>
 
       <div className="flex">
         <span className="ml-16 mb-4 mt-4 text-[#6588DE]">Starredd Message</span>
       </div>
 
-      <div class="py-1 flex justify-center">
-        <div class="w-80  max-w-full border-t border-[#D0D9DF]"></div>
+      <div className="py-1 flex justify-center">
+        <div className="w-80  max-w-full border-t border-[#D0D9DF]"></div>
       </div>
 
       <div className="flex border rounded-lg border-sky-500 w-4/5 mb-4 mt-4 ml-14">
