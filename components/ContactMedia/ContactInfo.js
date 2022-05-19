@@ -7,7 +7,7 @@ const ContactInfo = () => {
     profile_pic: "/images/user_profile.png",
   };
   return (
-    <div className=" mt-2 mr-2 flex flex-col items-center">
+    <div className=" mt-2 flex flex-col items-center">
       <span className="text-[#6588DE] text-[18px] font-semibold">
         Contact Info
       </span>
@@ -36,8 +36,8 @@ const ContactInfo = () => {
           <span className="text-[#F2F6F7] mr-4 mb-1 ml-4">Call</span>
         </div>
       </div>
-      <div class="py-1">
-        <div class="w-80  max-w-full border-t border-[#D0D9DF]"></div>
+      <div className="py-1">
+        <div className="w-80  max-w-full border-t border-[#D0D9DF]"></div>
       </div>
     </div>
   );
