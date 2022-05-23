@@ -9,8 +9,8 @@ const ChatListCard = ({ chatPreviewData, selectedChat, setSelectedChat, online }
 
     return (
         <div
-            onClick={() => setSelectedChat(chatPreviewData._id)}
-            className={` ${selectedChat === chatPreviewData._id ? "bg-[#6588DE] translate-x-1 shadow-[#6588DE]/50 shadow-lg" :
+            onClick={() => setSelectedChat(chatPreviewData)}
+            className={` ${selectedChat._id === chatPreviewData._id ? "bg-[#6588DE] translate-x-1 shadow-[#6588DE]/50 shadow-lg" :
                 "hover:bg-[#a7b8e25b] hover:translate-x-1"} flex p-3 rounded-[14px] cursor-pointer transition-all duration-200`}
         >
             <div className="basis-[25%] pr-1 min-w-max relative">
@@ -19,13 +19,13 @@ const ChatListCard = ({ chatPreviewData, selectedChat, setSelectedChat, online }
             </div>
 
             <div className="basis-[65%] flex flex-col justify-around">
-                <p className={`${selectedChat === chatPreviewData._id ? "text-[#FDFDFE]" : "text-[#52585D]"} text-[14px] whitespace-nowrap font-semibold`}>{chatPreviewData.name}</p>
-                <p className={`${selectedChat === chatPreviewData._id ? "text-[#F2F6F7]" : "text-[#96A9BA]"} py-[2px] text-xs text-gray-400`}>
+                <p className={`${selectedChat._id === chatPreviewData._id ? "text-[#FDFDFE]" : "text-[#52585D]"} text-[14px] whitespace-nowrap font-semibold`}>{chatPreviewData.name}</p>
+                <p className={`${selectedChat._id === chatPreviewData._id ? "text-[#F2F6F7]" : "text-[#96A9BA]"} py-[2px] text-xs text-gray-400`}>
                     {chatPreviewData.lastText}
                 </p>
             </div>
             <div className="pt-1 flex flex-col items-end justify-between basis-[10%]">
-                <p className={`${selectedChat === chatPreviewData._id ? "text-[#F2F6F7]" : "text-[#96A9BA]"} py-[2px] text-xs text-gray-400`}>
+                <p className={`${selectedChat._id === chatPreviewData._id ? "text-[#F2F6F7]" : "text-[#96A9BA]"} py-[2px] text-xs text-gray-400`}>
                     {chatPreviewData.lastChatTime}
                 </p>
             </div>

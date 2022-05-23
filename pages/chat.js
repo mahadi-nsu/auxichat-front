@@ -15,8 +15,23 @@ import { chatListData } from "../dummyChatList";
 
 const chat = () => {
   const router = useRouter();
-  const [selectedChat, setSelectedChat] = useState("");
+  const [selectedChat, setSelectedChat] = useState(null);
   const [chatOrMedia, setChatOrMedia] = useState("Chat");
+  const [message, setMessage] = useState("");
+  const [messageHistory, setMessageHistory] = useState([
+    {
+      sender: "628b64b3ab2e367b356fe0d0",
+      receiver: "628b5dffab2e367b356fe0c9",
+      message: "hihi",
+      createdAt: "10:11",
+    },
+    {
+      sender: "628b5dffab2e367b356fe0c9",
+      receiver: "628b64b3ab2e367b356fe0d0",
+      message: "hello",
+      createdAt: "10:12",
+    },
+  ]);
   const [me, setMe] = useState(null);
   const [users, setUsers] = useState([]);
   const [onlineUserIds, setOnlineUserIds] = useState([]);
@@ -26,26 +41,32 @@ const chat = () => {
       autoConnect: false,
     })
   );
-  const demoChat = [
-    {
-      name: "Mehmat",
-      message: "hey, how are you",
-      photo: "/images/person (11).png",
-      time: "10:10",
-    },
-    {
-      name: "Alena",
-      message: "fine, what is going on with you ?",
-      photo: "/images/person (1).png",
-      time: "10:10",
-    },
-    {
-      name: "Mehmat",
-      message: "nice, very nice",
-      photo: "/images/person (11).png",
-      time: "10:11",
-    },
-  ];
+
+  const genImageSrc = (senderId) => {
+    const image = senderId === me._id ? me.image : selectedChat.image;
+    const gender = senderId === me._id ? me.gender : selectedChat.gender;
+
+    return image
+      ? image
+      : gender === "male"
+      ? "/images/male.jpg"
+      : "/images/female.jpg";
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const chat = {
+      sender: me._id,
+      receiver: selectedChat._id,
+      message,
+      createdAt: Date.now(),
+    };
+    setMessage("");
+    chatSocket.emit("chatToServer", chat, (response) => {
+      console.log(response);
+      setMessageHistory([...messageHistory, chat]);
+    });
+  };
 
   useEffect(() => {
     axios
@@ -68,7 +89,9 @@ const chat = () => {
             (u) => u._id !== res1.data._id
           );
           setUsers(usersExceptMe);
-          setSelectedChat(usersExceptMe[0]._id);
+          if (usersExceptMe.length > 0) {
+            setSelectedChat(usersExceptMe[0]);
+          }
         });
       })
       .catch((err) => {
@@ -86,6 +109,7 @@ const chat = () => {
         </div>
         <div className="bg-[#E3F6FC] mt-4 p-4 flex flex-col gap-5 rounded-t-lg">
           {users &&
+            selectedChat &&
             users.map((user, index) => (
               <ChatListCard
                 selectedChat={selectedChat}
@@ -136,69 +160,82 @@ const chat = () => {
         </div>
 
         <div className="flex flex-col mb-[80px]">
-          {demoChat.map((content, index) => (
-            <div
-              key={index}
-              className={`${
-                content.name === "Mehmat" ? "self-end" : "self-start"
-              }`}
-            >
+          {me &&
+            selectedChat &&
+            messageHistory.map((content, index) => (
               <div
-                className={`${content.name === "Mehmat" ? "text-right" : ""}`}
-              >
-                <p className={`text-[#52585D] text-[12px] font-semibold py-2`}>
-                  {content.name}
-                </p>
-              </div>
-
-              <div
-                className={`flex gap-5 ${
-                  content.name === "Mehmat" ? "flex-row-reverse" : "flex-row"
+                key={index}
+                className={`${
+                  content.sender === me._id ? "self-end" : "self-start"
                 }`}
               >
-                <img
-                  className="w-[44px] h-[44px]"
-                  src={content.photo}
-                  alt="photo"
-                />
                 <div
-                  className={`${
-                    content.name === "Mehmat"
-                      ? "bg-[#F3BA4A] rounded-tr-none text-[#FDFDFE]"
-                      : "bg-[#E3F6FC] rounded-tl-none text-[#52585D]"
-                  } py-3 px-5 rounded-[14px]`}
+                  className={`${content.sender === me._id ? "text-right" : ""}`}
                 >
-                  <p className="text-[12px]">{content.message}</p>
-                  <p className="text-[10px] text-right pt-3">{content.time}</p>
+                  <p
+                    className={`text-[#52585D] text-[12px] font-semibold py-2`}
+                  >
+                    {content.sender === me._id ? me.name : selectedChat.name}
+                  </p>
+                </div>
+
+                <div
+                  className={`flex gap-5 ${
+                    content.sender === me._id ? "flex-row-reverse" : "flex-row"
+                  }`}
+                >
+                  <img
+                    className="w-[44px] h-[44px]"
+                    src={genImageSrc(content.sender)}
+                    alt="photo"
+                  />
+                  <div
+                    className={`${
+                      content.sender === me._id
+                        ? "bg-[#F3BA4A] rounded-tr-none text-[#FDFDFE]"
+                        : "bg-[#E3F6FC] rounded-tl-none text-[#52585D]"
+                    } py-3 px-5 rounded-[14px]`}
+                  >
+                    <p className="text-[12px]">{content.message}</p>
+                    <p className="text-[10px] text-right pt-3">
+                      {content.createdAt}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
 
-        <div className="absolute bottom-5 w-full flex items-center gap-5">
-          <img className="px-3 h-[20px]" src="/images/settings.png" alt="" />
-          <div className="flex items-center w-full pl-3 h-[40px] border border-[#96A9BA] bg-[#FDFDFD] rounded-[14px]">
-            <img
-              className="px-3 h-[20px]"
-              src="/images/attachment icon.png"
-              alt=""
-            />
-            <img
-              className="px-3 h-[20px]"
-              src="/images/voice icon.png"
-              alt=""
-            />
-            <input
-              className="focus:outline-none w-full px-5"
-              type="text"
-              placeholder="Type a new message..."
-            />
-            <button className="bg-[#6588DE] border border-[#6588DE] h-[40px] rounded-[13px] text-[12px] font-semibold text-[#FDFDFE] w-[108px]">
-              Send
-            </button>
+        <form onSubmit={handleSubmit}>
+          <div className="absolute bottom-5 w-full flex items-center gap-5">
+            <img className="px-3 h-[20px]" src="/images/settings.png" alt="" />
+            <div className="flex items-center w-full pl-3 h-[40px] border border-[#96A9BA] bg-[#FDFDFD] rounded-[14px]">
+              <img
+                className="px-3 h-[20px]"
+                src="/images/attachment icon.png"
+                alt=""
+              />
+              <img
+                className="px-3 h-[20px]"
+                src="/images/voice icon.png"
+                alt=""
+              />
+              <input
+                className="focus:outline-none w-full px-5"
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type a new message..."
+              />
+              <button
+                type="submit"
+                className="bg-[#6588DE] border border-[#6588DE] h-[40px] rounded-[13px] text-[12px] font-semibold text-[#FDFDFE] w-[108px]"
+              >
+                Send
+              </button>
+            </div>
           </div>
-        </div>
+        </form>
       </div>
       {/* MIDDLE PART END */}
 
