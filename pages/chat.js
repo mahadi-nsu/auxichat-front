@@ -20,14 +20,14 @@ const chat = () => {
   const [message, setMessage] = useState("");
   const [messageHistory, setMessageHistory] = useState([
     {
-      sender: "628b64b3ab2e367b356fe0d0",
-      receiver: "628b5dffab2e367b356fe0c9",
+      sender: "6230527036d98fd894d49abf",
+      receiver: "62307d257f3fa33f96c3201e",
       message: "hihi",
       createdAt: "10:11",
     },
     {
-      sender: "628b5dffab2e367b356fe0c9",
-      receiver: "628b64b3ab2e367b356fe0d0",
+      sender: "62307d257f3fa33f96c3201e",
+      receiver: "6230527036d98fd894d49abf",
       message: "hello",
       createdAt: "10:12",
     },
@@ -55,17 +55,20 @@ const chat = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const chat = {
+    const messageToSent = {
       sender: me._id,
       receiver: selectedChat._id,
       message,
       createdAt: Date.now(),
     };
     setMessage("");
-    chatSocket.emit("chatToServer", chat, (response) => {
-      console.log(response);
-      setMessageHistory([...messageHistory, chat]);
-    });
+    chatSocket.emit(
+      "sendMessage",
+      { messageHistory, messageToSent },
+      (response) => {
+        setMessageHistory(response);
+      }
+    );
   };
 
   useEffect(() => {
@@ -78,6 +81,9 @@ const chat = () => {
         });
         chatSocket.on("onlineUserIds", (userIds) => {
           setOnlineUserIds(userIds);
+        });
+        chatSocket.on("receiveMessage", (messageHistory) => {
+          setMessageHistory(messageHistory);
         });
 
         if (!chatSocket.connected) {
