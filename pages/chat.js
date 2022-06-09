@@ -18,20 +18,7 @@ const chat = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [chatOrMedia, setChatOrMedia] = useState("Chat");
   const [message, setMessage] = useState("");
-  const [messageHistory, setMessageHistory] = useState([
-    {
-      sender: "628b64b3ab2e367b356fe0d0",
-      receiver: "628b5dffab2e367b356fe0c9",
-      message: "hihi",
-      createdAt: "10:11",
-    },
-    {
-      sender: "628b5dffab2e367b356fe0c9",
-      receiver: "628b64b3ab2e367b356fe0d0",
-      message: "hello",
-      createdAt: "10:12",
-    },
-  ]);
+  const [messageHistory, setMessageHistory] = useState([]);
   const [me, setMe] = useState(null);
   const [users, setUsers] = useState([]);
   const [onlineUserIds, setOnlineUserIds] = useState([]);
@@ -56,15 +43,13 @@ const chat = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const chat = {
-      sender: me._id,
       receiver: selectedChat._id,
       message,
-      createdAt: Date.now(),
     };
     setMessage("");
     chatSocket.emit("chatToServer", chat, (response) => {
       console.log(response);
-      setMessageHistory([...messageHistory, chat]);
+      setMessageHistory([...messageHistory, response]);
     });
   };
 
@@ -99,6 +84,14 @@ const chat = () => {
         router.push("/login");
       });
   }, []);
+
+  useEffect(() => {
+    if (selectedChat) {
+      axios.get(`/chat/latestChat?personId=${selectedChat._id}`).then((res) => {
+        setMessageHistory(res);
+      });
+    }
+  }, [selectedChat]);
 
   return (
     <div className="h-screen flex gap-5 bg-[#F8FAFB]">
