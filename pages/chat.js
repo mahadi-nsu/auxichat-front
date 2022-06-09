@@ -18,9 +18,8 @@ const chat = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [chatOrMedia, setChatOrMedia] = useState("Chat");
   const [message, setMessage] = useState("");
-  const [messageHistory, setMessageHistory] = useState([]);
   const [me, setMe] = useState(null);
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState({});
   const [onlineUserIds, setOnlineUserIds] = useState([]);
   const [chatSocket] = useState(
     io(`ws://${baseURL}/chat`, {
@@ -48,7 +47,16 @@ const chat = () => {
     };
     setMessage("");
     chatSocket.emit("sendMessage", chat, (response) => {
-      setMessageHistory([...messageHistory, response]);
+      setUsers({
+        ...users,
+        [response.receiver]: {
+          ...users[response.receiver],
+          messageHistory: [
+            ...users[response.receiver].messageHistory,
+            response,
+          ],
+        },
+      });
     });
   };
 
@@ -57,14 +65,26 @@ const chat = () => {
       .get("/users/me")
       .then((res1) => {
         setMe(res1.data);
+
         chatSocket.on("connect_error", (error) => {
           console.log(error.message);
         });
         chatSocket.on("onlineUserIds", (userIds) => {
           setOnlineUserIds(userIds);
         });
-        chatSocket.on("receiveMessage", (messageHistory) => {
-          setMessageHistory(messageHistory);
+        chatSocket.on("receiveMessage", (response) => {
+          console.log(users);
+          console.log(response);
+          setUsers({
+            ...users,
+            [response.sender]: {
+              ...users[response.sender],
+              messageHistory: [
+                ...users[response.sender].messageHistory,
+                response,
+              ],
+            },
+          });
         });
 
         if (!chatSocket.connected) {
@@ -72,13 +92,13 @@ const chat = () => {
         }
 
         axios.get("/users/getAll").then((res2) => {
-          const usersExceptMe = res2.data.result.filter(
-            (u) => u._id !== res1.data._id
-          );
-          setUsers(usersExceptMe);
-          if (usersExceptMe.length > 0) {
-            setSelectedChat(usersExceptMe[0]);
-          }
+          const userData = res2.data.result.reduce((acc, curr) => {
+            acc[curr._id] = curr;
+
+            return acc;
+          }, {});
+          setUsers(userData);
+          setSelectedChat(res2.data.result[0]);
         });
       })
       .catch((err) => {
@@ -86,14 +106,6 @@ const chat = () => {
         router.push("/login");
       });
   }, []);
-
-  useEffect(() => {
-    if (selectedChat) {
-      axios.get(`/chat/latestChat?personId=${selectedChat._id}`).then((res) => {
-        setMessageHistory(res);
-      });
-    }
-  }, [selectedChat]);
 
   return (
     <div className="h-screen flex gap-5 bg-[#F8FAFB]">
@@ -105,7 +117,7 @@ const chat = () => {
         <div className="bg-[#E3F6FC] mt-4 p-4 flex flex-col gap-5 rounded-t-lg">
           {users &&
             selectedChat &&
-            users.map((user, index) => (
+            Object.values(users).map((user, index) => (
               <ChatListCard
                 selectedChat={selectedChat}
                 setSelectedChat={setSelectedChat}
@@ -156,8 +168,9 @@ const chat = () => {
 
         <div className="flex flex-col mb-[80px]">
           {me &&
+            users &&
             selectedChat &&
-            messageHistory.map((content, index) => (
+            users[selectedChat._id].messageHistory.map((content, index) => (
               <div
                 key={index}
                 className={`${
