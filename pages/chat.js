@@ -47,8 +47,7 @@ const chat = () => {
       message,
     };
     setMessage("");
-    chatSocket.emit("chatToServer", chat, (response) => {
-      console.log(response);
+    chatSocket.emit("sendMessage", chat, (response) => {
       setMessageHistory([...messageHistory, response]);
     });
   };
@@ -63,6 +62,9 @@ const chat = () => {
         });
         chatSocket.on("onlineUserIds", (userIds) => {
           setOnlineUserIds(userIds);
+        });
+        chatSocket.on("receiveMessage", (messageHistory) => {
+          setMessageHistory(messageHistory);
         });
 
         if (!chatSocket.connected) {
