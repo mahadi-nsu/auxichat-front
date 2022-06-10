@@ -11,7 +11,6 @@ import ContactActions from "../components/ContactMedia/ContactActions";
 import ContactInfo from "../components/ContactMedia/ContactInfo";
 import ContactMedia from "../components/ContactMedia/ContactMedia";
 import { baseURL } from "../config";
-import { chatListData } from "../dummyChatList";
 
 const chat = () => {
   const router = useRouter();
@@ -47,45 +46,50 @@ const chat = () => {
     };
     setMessage("");
     chatSocket.emit("sendMessage", chat, (response) => {
-      setUsers({
-        ...users,
-        [response.receiver]: {
-          ...users[response.receiver],
-          messageHistory: [
-            ...users[response.receiver].messageHistory,
-            response,
-          ],
-        },
-      });
+      // msg sent, we will update state on sentMessage event
     });
   };
 
   useEffect(() => {
+    const onConnectError = (error) => {
+      console.log(error.message);
+    };
+
+    const onOnlineUserIds = (userIds) => {
+      setOnlineUserIds(userIds);
+    };
+
+    const onReceiveMessage = (msg) =>
+      setUsers((prevUsers) => {
+        return {
+          ...prevUsers,
+          [msg.sender]: {
+            ...prevUsers[msg.sender],
+            messageHistory: [...prevUsers[msg.sender].messageHistory, msg],
+          },
+        };
+      });
+
+    const onSentMessage = (msg) =>
+      setUsers((prevUsers) => {
+        return {
+          ...prevUsers,
+          [msg.receiver]: {
+            ...prevUsers[msg.receiver],
+            messageHistory: [...prevUsers[msg.receiver].messageHistory, msg],
+          },
+        };
+      });
+
+    chatSocket.on("connect_error", onConnectError);
+    chatSocket.on("onlineUserIds", onOnlineUserIds);
+    chatSocket.on("receiveMessage", onReceiveMessage);
+    chatSocket.on("sentMessage", onSentMessage);
+
     axios
       .get("/users/me")
       .then((res1) => {
         setMe(res1.data);
-
-        chatSocket.on("connect_error", (error) => {
-          console.log(error.message);
-        });
-        chatSocket.on("onlineUserIds", (userIds) => {
-          setOnlineUserIds(userIds);
-        });
-        chatSocket.on("receiveMessage", (response) => {
-          console.log(users);
-          console.log(response);
-          setUsers({
-            ...users,
-            [response.sender]: {
-              ...users[response.sender],
-              messageHistory: [
-                ...users[response.sender].messageHistory,
-                response,
-              ],
-            },
-          });
-        });
 
         if (!chatSocket.connected) {
           chatSocket.connect();
@@ -105,6 +109,14 @@ const chat = () => {
         console.log(err.response.data);
         router.push("/login");
       });
+
+    () => {
+      // turning of socket listner on unmount for preventing memory leaks
+      chatSocket.off("connect_error", onConnectError);
+      chatSocket.off("onlineUserIds", onOnlineUserIds);
+      chatSocket.off("receiveMessage", onReceiveMessage);
+      chatSocket.off("sentMessage", onSentMessage);
+    };
   }, []);
 
   return (
