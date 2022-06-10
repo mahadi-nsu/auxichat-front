@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { axios } from "../lib/axios";
 
-const login = () => {
+const Login = () => {
   const router = useRouter();
   const [error, setError] = useState(null);
   const {
@@ -96,4 +96,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;

@@ -12,7 +12,7 @@ import ContactInfo from "../components/ContactMedia/ContactInfo";
 import ContactMedia from "../components/ContactMedia/ContactMedia";
 import { baseURL } from "../config";
 
-const chat = () => {
+const Chat = () => {
   const router = useRouter();
   const [selectedChat, setSelectedChat] = useState(null);
   const [chatOrMedia, setChatOrMedia] = useState("Chat");
@@ -281,4 +281,4 @@ const chat = () => {
   );
 };
 
-export default chat;
+export default Chat;
