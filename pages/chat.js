@@ -21,7 +21,8 @@ const Chat = () => {
   const [users, setUsers] = useState({});
   const [onlineUserIds, setOnlineUserIds] = useState([]);
   const [chatSocket] = useState(
-    io(`ws://${baseURL}/chat`, {
+    io(`${baseURL}/chat`, {
+      transports: ["websocket"],
       withCredentials: true,
       autoConnect: false,
     })
@@ -106,7 +107,8 @@ const Chat = () => {
         });
       })
       .catch((err) => {
-        console.log(err.response.data);
+        // console.log(err.response.data);
+        console.log(err);
         router.push("/login");
       });
 
